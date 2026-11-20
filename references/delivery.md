@@ -45,6 +45,8 @@ references 每项：id、type（character_sheet / prop / background / video_refe
 | duration_reason | 既有H3结构的特殊时长说明；新主生成固定30秒，旧镜头时长不批量覆盖 |
 | generation（可选） | 按当次接口记录protocol、preset、width、height、narrative_seconds和adopted_interval；duration_s为实际请求时长，采用区间不得超出请求。支持直接设置时长的接口令请求时长与剧情时长一致，完整采用，不追加凑时空镜。RB固定档位的适配仅按该接口经验处理，不能迁移到SparkCine；具体能力以当次模型与本地适配支持为准。 |
 | dramatic_arc | **段内必填三拍爆点弧线**（如：`施压/蓄势拍 → 加码/逼入极限拍 → 爆发反杀/悬念卡断拍`），杜绝单段情绪平推；直接展示在看板单元标题下 |
+| combat_mode（打戏必填） | 打戏引擎分类：`melee`（近身格斗/冷兵器拆招）、`vfx_duel`（仙侠术法/异能对轰）、`boss_crowd`（巨物压迫/以一敌多群战） |
+| combat_axis（打戏必填） | **打斗轴线与持械锁**（标明初始画左/画右站位、主手持械及换位全景镜号，如 `林昊画左(右手持刀) ⇄ 反派画右 ｜ 镜2全景滑铲换位`） |
 | slice_highlight（可选） | 本段承担的**切片高光画面与≤12字重锤金句**，供看板速览与跨模型核对 |
 | directing_summary | 看板标题下的一句口语化拍法概述；按实际播放顺序串起外化大动作、景别硬切、重锤金句表现与结果，仅供用户速览 |
 | scene、framing、action、camera | 场景、景别、完整中文外化画面表演和摄影路线 |

@@ -262,6 +262,72 @@ class BoardTests(unittest.TestCase):
         skill_custom, _ = cps.create(self.base, '自定义测试', style='美式硬核暗黑美漫，粗犷阴影与红黑双色调', style_name='暗黑美漫')
         self.assertIn('已锁定画风 `暗黑美漫`', skill_custom.read_text(encoding='utf-8'))
 
+    def test_combat_anti_collapse_gates_and_board_rendering(self):
+        data = deepcopy(self.data)
+        data['active_model'] = 'seedance2'
+        data['thrill_plan'] = dict(
+            opening_hook_3s='0–3秒反派劈门而入',
+            core_pain_point='主角被逼退至柜台角',
+            payoff_climax='一刀震碎木桌反杀震退对手',
+            thrill_level=9,
+            slice_highlight='金句“滚出去！”',
+            ending_hook='敌方援兵破窗围堵'
+        )
+        base_group = dict(
+            id='DB_COMBAT', title='当铺近身斩杀', source_locator='原件打戏段', model='seedance2', duration_s=15,
+            scene='当铺大堂', framing='中全景立位硬切特写',
+            dramatic_arc='破门压迫 → 格挡顿帧 → 反杀撞碎木桌',
+            combat_mode='melee',
+            combat_axis='起态：林昊画左(右手持横刀) ⇄ 反派画右(空手) ｜ 换位：无换位',
+            action='画左林昊右手持刀硬挡反派重拳，接触瞬间火星炸开，随即反手一脚将画右反派震退撞碎木桌。',
+            camera='中全景确立双方站位，动中硬切兵刃接触特写，接低仰拍撞碎木桌飞退。',
+            sound='刀锋破风、金铁交鸣脆响、木桌炸裂与烟尘落定死寂。',
+            continuity='林昊持刀收势喘息，反派倒在碎木中。',
+            directing_summary='林昊硬挡重拳爆出火星，反脚震退反派撞碎木桌喝出“滚出去！”',
+            references=['C01'], dialogue=['林昊：滚出去！'],
+            shots=[
+                dict(number=1, start_s=0, end_s=5, description='中全景画左林昊持刀立位迎击画右突进的反派。'),
+                dict(number=2, start_s=5, end_s=10, description='动中硬切接触特写，短暂停顿火星炸开，震退对手撞碎木桌。'),
+                dict(number=3, start_s=10, end_s=15, description='低仰拍烟尘中林昊喝出：“滚出去！”')
+            ],
+            dialogue_events=[dict(start_s=11, end_s=13, speaker='林昊', performance='冷喝', line='滚出去！', text='滚出去！')],
+            prompt_text='15秒，16:9，高燃动作爽剧。@图片1林昊，共用冷暖逆光。\n0–15秒。中全景画左林昊持刀迎击，硬切特写火星炸开，震退对手撞碎木桌：“滚出去！”'
+        )
+        data['seedance_groups'] = [base_group]
+        self.assertEqual(board.validate(data, self.base, True), ([], []))
+        rendered = board.render(data, self.base, self.base / '看板.html', [])
+        self.assertIn('⚔️ 近身格斗 / 冷兵器拆招', rendered)
+        self.assertIn('🧭 起态：林昊画左(右手持横刀)', rendered)
+
+        # Missing combat_axis
+        no_axis = deepcopy(data)
+        no_axis['seedance_groups'][0].pop('combat_axis')
+        errs, _ = board.validate(no_axis, self.base, True)
+        self.assertTrue(any('combat_axis' in e for e in errs))
+
+        # Hazard phrase detected
+        hazard = deepcopy(data)
+        hazard['seedance_groups'][0]['action'] = '双方拳影如雨连续交手，伴随激烈打斗声撞碎木桌。'
+        errs, _ = board.validate(hazard, self.base, True)
+        self.assertTrue(any('打戏高危崩坏词' in e for e in errs))
+
+        # Shot density cap (>4 shots for 15s SD2.0 combat)
+        too_many_shots = deepcopy(data)
+        too_many_shots['seedance_groups'][0]['shots'] = [
+            dict(number=i, start_s=(i - 1) * 3, end_s=i * 3, description='击飞撞碎木桌。') for i in range(1, 6)
+        ]
+        errs, _ = board.validate(too_many_shots, self.base, True)
+        self.assertTrue(any('最多4个镜头' in e for e in errs))
+
+        # Missing physical impact feedback
+        no_impact = deepcopy(data)
+        no_impact['seedance_groups'][0]['action'] = '画左林昊持刀与画右反派摆出对峙架势挥动武器。'
+        for s in no_impact['seedance_groups'][0]['shots']:
+            s['description'] = '林昊在画左挥刀对峙反派。'
+        no_impact['seedance_groups'][0]['prompt_text'] = '15秒，16:9，高燃动作。@图片1林昊。\n0–15秒。画左林昊挥刀对峙：“滚出去！”'
+        errs, _ = board.validate(no_impact, self.base, True)
+        self.assertTrue(any('受击物理反馈' in e for e in errs))
+
 
 if __name__ == '__main__':
     unittest.main()

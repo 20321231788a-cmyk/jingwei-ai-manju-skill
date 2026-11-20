@@ -1,26 +1,27 @@
-# 经纬AI，一键漫剧创作skill · V3.1
+# 经纬AI，一键漫剧创作skill · V3.3
 
-> **经纬AI，一键漫剧创作skill（V3.1 公开首发版 · 持续更新中）**：
-> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 画风锁与无损四视角资产 / 外化导演与三大模型高冲击编译 / 代码级反平淡机检与终审看板**。
+> **经纬AI，一键漫剧创作skill（V3.3 打戏专精强化版 · 持续更新中）**：
+> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 画风锁与无损四视角资产 / 三大打戏引擎与多模型高冲击编译 / 代码级反平淡与打戏防崩机检**。
 >
-> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **八条创作硬约束** + **四道代码级「平淡度一票否决」机检** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与可视化 HTML 制作看板（零第三方 Python 依赖，开箱即用）。
+> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **八条创作硬约束** + **八道代码级机检（4 道反平淡 + 4 道打戏防崩）** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与可视化 HTML 制作看板（零第三方 Python 依赖，开箱即用）。
 
-[![Version](https://img.shields.io/badge/Version-V3.1%20%E9%A6%96%E5%8F%91%E7%AC%AC%E4%B8%80%E7%89%88-f59e0b)](#)
+[![Version](https://img.shields.io/badge/Version-V3.3%20%E6%89%93%E6%88%8F%E4%B8%93%E7%B2%BE%E7%89%88-f59e0b)](#)
 [![Models](https://img.shields.io/badge/Models-Wan3.0%20%7C%20SD2.0%20%7C%20H3-b4a2ff)](#-三三套模型专属高冲击编译模具头部减脂--动作权重优先)
-[![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-六快速安装零依赖)
-[![Status](https://img.shields.io/badge/Status-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD-6366f1)](#-八持续更新说明与开源致谢)
+[![Combat](https://img.shields.io/badge/Combat-3%20Engines%20%2B%20Axis%20Lock-ef4444)](#-四三大打戏引擎与防崩机检scriptsaction-vfxmd--build_boardpy)
+[![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-七快速安装零依赖)
+[![Status](https://img.shields.io/badge/Status-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD-6366f1)](#-九持续更新说明与开源致谢)
 
 ---
 
 ## 💡 核心理念：用户只给原件，AI 跑完百条导演与机检规则
 
-很多 AI 漫剧烧钱抽卡却依然“站桩念经、平淡无味”，根源在于：
+很多 AI 漫剧烧钱抽卡却依然“站桩念经、打戏融成残影”，根源在于：
 1. **死守原件水词**：不敢砍废话、不把危机前置到前 3 秒，照抄小说导致划走率爆表；
 2. **微表情陷阱**：低预算下让 AI 演“眼神微冷、手指轻攥”，抽卡 10 次也是面瘫站桩；
-3. **切模型失真**：Wan3.0（30s）、SD2.0（15s）、H3（4–15s）提示词脾气完全不同，换模型转写直接丢掉动作和金句；
-4. **画风写死或漂移**：新建项目套用固定画风，或跨镜头人脸与场景媒介分裂。
+3. **打戏喂撑与越轴**：在一镜里写“拳脚如雨、连招十余招”，视频模型必出多手多脚与左右乱跳；
+4. **切模型失真 & 画风漂移**：Wan3.0（30s）、SD2.0（15s）、H3（4–15s）格式互斥，转写即丢动作与金句；新建项目套用固定画风导致题材割裂。
 
-**「经纬AI，一键漫剧创作skill」（V3.1）通过「一层共用爽剧母本 + 前置画风锁 + 三套模型减脂编译器 + 代码级一票否决门禁」，把下限直接锁死在中上商业水准。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
+**「经纬AI，一键漫剧创作skill」（V3.3）通过「一层共用爽剧母本 + 前置画风锁 + 三大打戏引擎 + 三套模型减脂编译器 + 代码级双八门禁」，把下限直接锁死在中上商业水准。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
 
 ---
 
@@ -91,31 +92,53 @@
 
 ---
 
-## 🛡️ 四、四道代码级「平淡度一票否决」机检（`scripts/build_board.py`）
+## ⚔️ 四、三大打戏引擎与防崩机检（`action-vfx.md` + `build_board.py`）
 
-不同于只靠文字提醒的纯 Prompt 技能，本技能内置 Python 标准库校验器，联审与导出时**自动执行代码级硬拦截**：
+针对 AI 视频模型对连续高速搏击易穿模的物理特性，V3.3 新增三套高出片率打戏引擎与四道代码级防崩拦截：
 
-1. **跨模型爆点与金句丢失拦截**：自动提取 `thrill_plan.slice_highlight` 中的引号金句，核验其是否 100% 落在当前激活模型（Wan3 / SD2.0 / H3）的生效提示词中，切模型漏掉直接报错；
-2. **提示词头部肥胖拦截**：自动计算第一镜时间戳之前的头部字数（Wan3 > 110 字、SD2.0 > 95 字直接拦截），防止冗长材质说明书吃光动作注意力；
-3. **单段台词过载拦截**：校验 SD2.0（>38 字）与 Wan3（>85 字）台词密度，防止塞满长台词变成站桩念经；
-4. **微表情站桩词拦截**：扫描动作描述，发现只有“眼神微、嘴角微、手指轻”等弱动作且无强外化动词时直接打回重写；并校验 `dramatic_arc` 三拍弧线与必填槽位。
+| 引擎代号 (`combat_mode`) | 适用打戏类型 | 防崩核心策略（低成本少抽卡一次过） |
+| --- | --- | --- |
+| **`melee`** | 近身格斗 / 冷兵器拆招 | 严禁“拳脚如雨/连招十余”，拆为**单次硬碰 + 顿帧火星 + 撞碎木桌墙柱等场景破坏** |
+| **`vfx_duel`** | 仙侠术法 / 异能对轰 | 单镜限 **2 层主特效**（1主形制+1环境受光），写清剑气/符环轮廓，**禁白光糊脸与对波僵持** |
+| **`boss_crowd`** | 巨物压迫 / 以一敌多 | 极低角度仰拍+渺小剪影衬托体量；群战严禁写5人以上独立招式，强制**中心爆发+外围统一放射状掀飞** |
+
+- **顿帧感（Hit-stop）+ 四层战斗音效**：命中瞬间强制写明“接触短暂停顿压实 + 火星/气浪炸开 + 短促微震回稳 + 撞物破坏”，音效落到**起势破风 → 接触爆裂 → 环境破坏 → 余波死寂接金句**四层（禁写“激烈打斗声”）。
+- **分模型打斗回合上限**：`Wan3.0 (30s)` 硬限 3–4 个回合、最多 7 镜；`SD2.0 (15s)` 硬限 1–2 个回合、最多 4 镜；`H3` 专注 1 个核心接触点。
 
 ---
 
-## 📂 五、技能目录结构（1 入口 + 7 规则库 + 4 脚本）
+## 🛡️ 五、八道代码级机检门禁（4 道反平淡 + 4 道打戏防崩）
+
+不同于只靠文字提醒的纯 Prompt 技能，本技能内置 Python 标准库校验器，联审与导出时**自动执行代码级硬拦截**：
+
+**A. 反平淡四道一票否决：**
+1. **跨模型爆点与金句丢失拦截**：自动提取 `thrill_plan.slice_highlight` 中的引号金句，核验其是否 100% 落在当前激活模型（Wan3 / SD2.0 / H3）的生效提示词中；
+2. **提示词头部肥胖拦截**：自动计算第一镜时间戳之前的头部字数（Wan3 > 110 字、SD2.0 > 95 字直接拦截）；
+3. **单段台词过载拦截**：校验 SD2.0（>38 字）与 Wan3（>85 字）台词密度，防止塞满长台词变成站桩念经；
+4. **微表情站桩词拦截**：扫描动作描述，发现只有“眼神微、嘴角微、手指轻”等弱动作且无强外化动词时直接打回重写；并校验 `dramatic_arc` 三拍弧线。
+
+**B. 打戏专项四道防崩拦截（单元设置 `combat_mode` / `is_combat` 时自动触发）：**
+5. **攻防轴线与持械锁校验**：未填 `combat_axis` 或未写明初始画左/画右站位直接报错，换位必须全景显式跨线；
+6. **高危崩坏词拦截**：自动拦截 AI 必糊词汇（如`拳影如雨`、`连招十余`、`连续格挡多次`、`万道金光淹没`、`激烈打斗声`）；
+7. **防喂撑镜头密度拦截**：打戏段 SD2.0（15s）超过 4 镜、Wan3.0（30s）超过 7 镜直接报错提示精简回合；
+8. **受击物理反馈与战损核验**：强制正文落地具体受击结果（`震退 / 撞碎 / 火星 / 倒飞 / 裂痕 / 气浪 / 战损`等），并在看板直观展示 `⚔️ 打戏引擎` 与 `🧭 攻防轴线与持械`。
+
+---
+
+## 📂 六、技能目录结构（1 入口 + 7 规则库 + 4 脚本）
 
 ```text
 h3-storyboard-director/
-├── SKILL.md                          # 总控入口：V3.1 八条创作约束、工作方式与制作边界
+├── SKILL.md                          # 总控入口：V3.3 八条创作约束、工作方式与制作边界
 ├── README.md                         # 本说明文档
 ├── agents/
 │   └── openai.yaml                   # Agent 元数据与默认触发提示词
 ├── references/                       # 7 份核心规则库
-│   ├── style-presets.md              # [新增] 6大内置主流画风预设库 + 未指定必提问画风锁
+│   ├── style-presets.md              # 6大内置主流画风预设库 + 未指定必提问画风锁
 │   ├── directing.md                  # 爽点提纯引擎、thrill_plan/dramatic_arc、外化动作与三段式对话
-│   ├── model-routing.md              # Wan3.0(30s) / SD2.0(15s) / H3(4-15s) 切分铁律与减脂编译模具
+│   ├── model-routing.md              # Wan3.0(30s) / SD2.0(15s) / H3(4-15s) 切分铁律、打戏密度红线与模具
+│   ├── action-vfx.md                 # 三大打戏引擎、攻防轴线锁、顿帧四层音效与修仙特效美术分层
 │   ├── h3-prompt-practice.md         # 提示词写法规范与「平淡度一票否决」八项对照审核
-│   ├── action-vfx.md                 # 攻防因果推进与修仙/打戏特效美术分层
 │   ├── delivery.md                   # 素材标准、同一数据源、一剧一看板与队列提交规范
 │   └── project-skills.md             # 作品专属技能创建、画风锁继承与续作路由机制
 ├── assets/
@@ -127,12 +150,12 @@ h3-storyboard-director/
     ├── build_board.py                # 制作数据硬门禁机检 + HTML 终审看板导出器
     ├── create_project_skill.py       # 一键创建新作品专属技能（含 --style 画风锁）与独立看板启动器
     ├── stitch_character_sheet.py     # 四视角人设图无损拼接器（输出 3344×1882 / 3840×2160）
-    └── test_build_board.py           # 13 项自动化单元测试套件
+    └── test_build_board.py           # 14 项自动化单元测试套件
 ```
 
 ---
 
-## 📦 六、快速安装（零依赖）
+## 📦 七、快速安装（零依赖）
 
 将本技能置于工作区的 `.agents/skills/h3-storyboard-director` 目录，即可被 **Antigravity / Codex / Claude Code** 等主流 Agent 自动挂载：
 
@@ -140,20 +163,20 @@ h3-storyboard-director/
 # 方式一：使用 GitHub CLI 一键克隆到工作区
 gh repo clone 20321231788a-cmyk/jingwei-ai-manju-skill .agents/skills/h3-storyboard-director
 
-# 方式二：解压 V3.1 发行版压缩包
-Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.1.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
+# 方式二：解压 V3.3 发行版压缩包
+Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.3.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
 ```
 
 运行离线自检（仅依赖 Python 标准库，无需 `pip install`）：
 
 ```powershell
 python .agents/skills/h3-storyboard-director/scripts/test_build_board.py -v
-# Expected: Ran 13 tests ... OK
+# Expected: Ran 14 tests ... OK
 ```
 
 ---
 
-## 🚀 七、三步全自动使用教程
+## 🚀 八、三步全自动使用教程
 
 1. **建剧并锁定画风（未指定画风时 Agent 会主动提问）**：
    - 将小说或剧本原件放入工作区，对 Agent 说：`使用 $h3-storyboard-director 帮我建新项目《作品名》并制作第1集`。
@@ -161,18 +184,18 @@ python .agents/skills/h3-storyboard-director/scripts/test_build_board.py -v
      ```powershell
      python .agents/skills/h3-storyboard-director/scripts/create_project_skill.py --project "作品名" --genre "题材" --style S2
      ```
-2. **爽点提纯、人设拼图与多模型编译**：
-   - Agent 自动提纯 `thrill_plan` 与 `dramatic_arc`，分步生成人物四视角图并用 `stitch_character_sheet.py` 无损拼接为 `3344×1882` 整图；
+2. **爽点提纯、打戏防崩编排、人设拼图与多模型编译**：
+   - Agent 自动提纯 `thrill_plan` 与 `dramatic_arc`（打戏单元自动选择 `melee`/`vfx_duel`/`boss_crowd` 并锁定 `combat_axis`），分步生成人物四视角图并用 `stitch_character_sheet.py` 无损拼接为 `3344×1882` 整图；
    - 默认按 `Wan3.0`（30秒）生成高冲击提示词，也可随时指定切换 `SD2.0`（15秒）或 `H3`（短补镜）。
 3. **机检与看板终审**：
    ```powershell
    python .agents/skills/h3-storyboard-director/scripts/build_board.py <作品名>/<集数>/制作数据.json --final-review
    ```
-   打开生成的 `打开看板.html`（或双击 `<作品名>/启动制作看板.cmd`）核对爽点骨架、三拍弧线与参考图，确认无误后一键复制提示词或通过适配队列提交生成。
+   打开生成的 `打开看板.html`（或双击 `<作品名>/启动制作看板.cmd`）核对爽点骨架、三拍弧线、打戏轴线与参考图，确认无误后一键复制提示词或通过适配队列提交生成。
 
 ---
 
-## 🔄 八、持续更新说明与开源致谢
+## 🔄 九、持续更新说明与开源致谢
 
 - **版本说明**：本技能将持续随视频模型能力持续更新迭代。
 - **方法借鉴与致谢**：部分戏剧工艺与冲突方法论借鉴了开源社区 [`short-drama-factory`](https://github.com/lixiaoxiao9888-create/short-drama-factory) 与 [`manju-laoli-skill`](https://github.com/lixiaoxiao9888-create/manju-laoli-skill) 的前置锁与质检思路，并结合本工作区“一层共用母本 + 多模型减脂编译器 + 一剧一看板”进行了独立重构。

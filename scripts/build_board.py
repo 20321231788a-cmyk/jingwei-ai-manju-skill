@@ -267,6 +267,63 @@ def validate_thrill_and_anti_bland(data, *, highlight_units=None):
     return errors, warnings
 
 
+COMBAT_MODES = {
+    'melee': '近身格斗 / 冷兵器拆招',
+    'vfx_duel': '仙侠术法 / 异能对轰',
+    'boss_crowd': '巨物压迫 / 以一敌多群战',
+}
+COMBAT_HAZARD_RE = re.compile(
+    r'拳影如雨|拳脚如雨|连招十余|连续格挡(?:多|数|十)|360度(?:高速)?环绕打斗|万道金光淹没|激烈打斗声'
+)
+COMBAT_IMPACT_RE = re.compile(
+    r'震退|撞碎|火星|倒飞|碎裂|炸裂|裂痕|战损|气浪|掀翻|破盾|断刃|跌坐|失衡|烟尘|砸地|砸碎|轰碎|击飞|劈开|shatter|recoil|spark|blast|impact',
+    re.I,
+)
+
+
+def validate_combat_anti_collapse(data):
+    """Enforce combat mode presets, axis lock, density caps, and physical impact feedback."""
+    errors, warnings = [], []
+    for u in display_units(data):
+        if u.get('h3_layout') == 'two_complete_15s_blocks':
+            continue
+        uid = u.get('id', '')
+        mode = u.get('combat_mode')
+        is_combat = text(mode) or u.get('is_combat') is True
+        if not is_combat:
+            continue
+        if text(mode) and mode not in COMBAT_MODES:
+            errors.append(f'{uid}：未知combat_mode“{mode}”，须为 melee / vfx_duel / boss_crowd')
+        axis = u.get('combat_axis', '')
+        if not text(axis) or not any(side in axis for side in ('左', '右')):
+            errors.append(f'{uid}：缺少combat_axis攻防轴线与持械锁（须写明初始画左/画右站位与主手持械）')
+        model = u.get('model') or data.get('active_model') or 'h3'
+        shots = u.get('shots', [])
+        if isinstance(shots, list) and shots:
+            if model == 'seedance2' and len(shots) > 4:
+                errors.append(f'{uid}：SD2.0 15秒打戏最多4个镜头（当前{len(shots)}镜），须合并精简回合防喂撑')
+            elif model == 'wan3' and len(shots) > 7:
+                errors.append(f'{uid}：Wan3 30秒打戏最多7个镜头（当前{len(shots)}镜），须控制在3–4个交锋回合防喂撑')
+        shot_texts = [s.get('description', '') for s in shots if isinstance(s, dict)]
+        hazard_targets = [
+            u.get('action', ''),
+            u.get('sound', ''),
+            u.get('prompt_text', ''),
+            str(u.get('prompt', {}).get('detailed_description', '')),
+            *shot_texts,
+        ]
+        for t in hazard_targets:
+            if text(t):
+                m = COMBAT_HAZARD_RE.search(t)
+                if m:
+                    errors.append(f'{uid}：命中打戏高危崩坏词“{m.group(0)}”，须改写为单次硬碰/场景破坏与分层音效')
+                    break
+        impact_corpus = '\n'.join([u.get('action', ''), model_prompt(u), *shot_texts])
+        if not COMBAT_IMPACT_RE.search(impact_corpus):
+            errors.append(f'{uid}：打戏缺少受击物理反馈或战损结果（如震退/撞碎/火星/倒飞/裂痕/气浪）')
+    return errors, warnings
+
+
 def validate(data, base, final=False, *, highlight_units=None):
     errors, warnings = [], []
     if not isinstance(data, dict):
@@ -434,6 +491,8 @@ def validate(data, base, final=False, *, highlight_units=None):
         errors.extend(seed_errors); warnings.extend(seed_warnings)
     thrill_errors, thrill_warnings = validate_thrill_and_anti_bland(data, highlight_units=highlight_units)
     errors.extend(thrill_errors); warnings.extend(thrill_warnings)
+    combat_errors, combat_warnings = validate_combat_anti_collapse(data)
+    errors.extend(combat_errors); warnings.extend(combat_warnings)
     return errors, list(dict.fromkeys(warnings))
 
 
@@ -513,7 +572,7 @@ def render(data, base, output, warnings):
                 parts.append(paragraph(label, plan[key]))
     if wan:
         configured = any((u.get('generation', {}).get('protocol') in ('doubao-canvas-v1', 'scenora-v1')) if seedance else (u.get('generation', {}).get('protocol') in ('wan-portal-v1', 'scenora-v1')) for u in units)
-        parts.append(paragraph('生成状态', 'Seedance 2.0中文15秒稿，按本次授权经单一豆包会话生成；任务查询下载见制作工作台。' if seedance and configured else 'Wan3分镜与提示词可在工作台原位编辑；已接入万万工作台，任务状态见工作台。' if configured else '当前模型尚未配置提交接口，提交禁用。'))
+        parts.append(paragraph('生成状态', '已配置 Seedance 2.0 接口的分镜可在制作工作台提交，任务与成片也在工作台查看。' if seedance and configured else 'Wan3分镜与提示词可在工作台原位编辑；已接入万万工作台，任务状态见工作台。' if configured else '当前模型尚未配置提交接口，提交禁用。'))
         parts.append('<details><summary>原分镜与独立片头对照（原ID及H3正文保留在制作数据中）</summary>' + ''.join(paragraph(u['id'], f'{u["title"]} · 原{u["duration_s"]}秒') for u in data['units']) + '</details>')
     for item in data.get('pending_items', []):
         parts.append(paragraph('待用户决定', item))
@@ -525,6 +584,10 @@ def render(data, base, output, warnings):
         parts.append(f'<article id="{uid}"><small>{uid} · {u["duration_s"]:g}秒 · {esc(u["framing"])}</small><h2>{esc(u["title"])}</h2>')
         if text(u.get('dramatic_arc')):
             parts.append(paragraph('三拍爆点弧线', u['dramatic_arc']))
+        if text(u.get('combat_mode')):
+            parts.append(paragraph('打戏引擎', f'⚔️ {COMBAT_MODES.get(u["combat_mode"], u["combat_mode"])}'))
+        if text(u.get('combat_axis')):
+            parts.append(paragraph('攻防轴线与持械', f'🧭 {u["combat_axis"]}'))
         if text(u.get('slice_highlight')):
             parts.append(paragraph('切片高光与金句', u['slice_highlight']))
         if text(u.get('directing_summary')):

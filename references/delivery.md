@@ -31,7 +31,8 @@
 
 作品按[专属技能机制](project-skills.md)保存长期创作方法，具体剧本、爽点骨架、镜头与提示词只在各集数据中维护。每个作品/剧集保存一份 `制作数据.json`，由[空白数据模板](../assets/production-template.json)起步。source 为原件路径，所有相对文件路径相对制作数据文件。原件不改写；分镜每单元的 source_locator 指向原件页码、段落或镜号，便于联审。多份依据放 additional_sources 列表。
 
-顶层：project、episode、title、source、additional_sources、aspect_ratio、style、director_style、**thrill_plan**、review_status、pending_items、references、units（及 `active_model` 对应的 `generation_groups` / `seedance_groups`）。
+顶层：project、episode、title、source、additional_sources、aspect_ratio、**style_name**、style、director_style、**thrill_plan**、review_status、pending_items、references、units（及 `active_model` 对应的 `generation_groups` / `seedance_groups`）。
+- **style_name / style（画风锁，建剧未指定必提问）**：按[视觉画风库与自定义画风锁](style-presets.md)填入用户选定的内置画风标签（如 `r2混合媒介` / `2D厚涂韩漫` / `3D国漫玄幻` / `新中式水墨` / `电影写实真人` / `暗黑赛博霓虹`）或自定义画风名称与完整视觉描述；看板顶部将直接显示 `style_name` 标签。
 - **thrill_plan（集级必填爽点骨架）**：包含 `opening_hook_3s`（前3秒痛点/异象钩）、`core_pain_point`（核心受压痛点）、`payoff_climax`（情绪宣泄/反杀爆点）、`thrill_level`（爽点强度1–10）、`slice_highlight`（10–15秒切片名场面+引号括起的≤12字重锤金句；脚本自动核对该金句在当前激活模型生效提示词中100%落地）、`ending_hook`（集尾最后3–5秒断钩）。
 - review_status 只用 draft / reviewed / user_approved；reviewed 表示Agent统一审阅完成，绝不等于用户已批准。用户明确批准后才记 user_approved；任何内容改动先回 draft，局部复核完成后回 reviewed，需再次由用户终审。无实际视频时始终不写成片通过。
 

@@ -205,7 +205,7 @@ FIRST_SHOT_RE = re.compile(r'(?:^|\n)\s*(?:0(?:\.0+)?\s*[–—~-]\s*\d|分镜\s
 SPOKEN_CHAR_RE = re.compile(r'[\u4e00-\u9fffA-Za-z0-9]')
 
 
-def validate_thrill_and_anti_bland(data):
+def validate_thrill_and_anti_bland(data, *, highlight_units=None):
     """Enforce thrill drama structure slots and multi-model anti-bland gates."""
     errors, warnings = [], []
     has_thrill = 'thrill_plan' in data or data.get('enforce_thrill') is True
@@ -225,10 +225,11 @@ def validate_thrill_and_anti_bland(data):
         golden_lines = [q.strip() for q in re.findall(r'“([^”]+)”|"([^"]+)"', highlight) for q in q if q.strip()]
         if text(plan.get('golden_line')):
             golden_lines.append(plan['golden_line'].strip())
-        if golden_lines and units:
+        episode_units = units if highlight_units is None else highlight_units
+        if golden_lines and episode_units:
             all_prompts = '\n'.join(
                 model_prompt(u) + '\n' + str(u.get('prompt_zh', {}).get('detailed_description', '')) + '\n' + '\n'.join(u.get('dialogue', []))
-                for u in units
+                for u in episode_units
             )
             for gline in golden_lines:
                 if len(SPOKEN_CHAR_RE.findall(gline)) > 16:
@@ -266,7 +267,7 @@ def validate_thrill_and_anti_bland(data):
     return errors, warnings
 
 
-def validate(data, base, final=False):
+def validate(data, base, final=False, *, highlight_units=None):
     errors, warnings = [], []
     if not isinstance(data, dict):
         return ['制作数据必须为JSON对象'], []
@@ -431,7 +432,7 @@ def validate(data, base, final=False):
     if data.get('active_model') == 'seedance2':
         seed_errors, seed_warnings = validate_text_groups(data, lookup, base, final, 'seedance2', 15, 'seedance_groups', 'Seedance 2.0')
         errors.extend(seed_errors); warnings.extend(seed_warnings)
-    thrill_errors, thrill_warnings = validate_thrill_and_anti_bland(data)
+    thrill_errors, thrill_warnings = validate_thrill_and_anti_bland(data, highlight_units=highlight_units)
     errors.extend(thrill_errors); warnings.extend(thrill_warnings)
     return errors, list(dict.fromkeys(warnings))
 
@@ -488,14 +489,17 @@ def render(data, base, output, warnings):
     parts = ['<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
              f'<title>{esc(data["title"])}</title><style>{css}</style></head><body><main>',
              f'<header><small>{esc(data["project"])} · {esc(data["episode"])}</small><h1>{esc(data["title"])}<br>当前图文分镜</h1><p>{esc(summary)}</p>']
-    for tag in (data['aspect_ratio'], 'r2混合媒介', 'Seedance 2.0 · 图片参考 · 每段15秒' if seedance else 'Wan3 · 图片参考 · 每段30秒' if wan else 'MiniMax-H3 · 全能多模态参考' if video_count else 'MiniMax-H3 · 全能图片参考'):
+    style_raw = data.get('style', '')
+    style_tag = data.get('style_name') or ('r2混合媒介' if ('r2' in style_raw or '混合媒介' in style_raw) else '自定义画风')
+    for tag in (data['aspect_ratio'], style_tag, 'Seedance 2.0 · 图片参考 · 每段15秒' if seedance else 'Wan3 · 图片参考 · 每段30秒' if wan else 'MiniMax-H3 · 全能多模态参考' if video_count else 'MiniMax-H3 · 全能图片参考'):
         parts.append(f'<span class="tag">{esc(tag)}</span>')
     parts.append('<nav>')
     for i, source in enumerate([data['source']] + data.get('additional_sources', []), 1):
         if resolve(base, source).is_file():
             parts.append(f'<a href="{esc(url(base, source, output))}">原件{i}</a>')
     parts.append('</nav></header><div class="note">')
-    parts.extend([paragraph('状态', state + '；本页为脚本审核，实际视频状态与动态验收见制作工作台。'), paragraph('画风', data['style']), paragraph('导演选择', data['director_style'])])
+    style_display = f'[{data["style_name"]}] {style_raw}' if text(data.get('style_name')) else style_raw
+    parts.extend([paragraph('状态', state + '；本页为脚本审核，实际视频状态与动态验收见制作工作台。'), paragraph('画风', style_display), paragraph('导演选择', data['director_style'])])
     plan = data.get('thrill_plan')
     if isinstance(plan, dict) and any(text(plan.get(k)) for k in ('opening_hook_3s', 'core_pain_point', 'payoff_climax', 'slice_highlight', 'ending_hook')):
         level_tag = f'（爽点强度 {plan["thrill_level"]}/10）' if number(plan.get('thrill_level')) else ''

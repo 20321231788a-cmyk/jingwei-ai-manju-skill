@@ -242,6 +242,26 @@ class BoardTests(unittest.TestCase):
         errs, _ = board.validate(data, self.base, True)
         self.assertTrue(any('对白缺失、重复或分句改字' in e for e in errs))
 
+    def test_custom_style_presets_and_project_skill_prompt(self):
+        import create_project_skill as cps
+        data = deepcopy(self.data)
+        data['style_name'] = '2D厚涂韩漫'
+        data['style'] = '高清商业条漫厚涂赛璐璐画风，干净线稿与强对比光影。'
+        rendered = board.render(data, self.base, self.base / '看板.html', [])
+        self.assertIn('<span class="tag">2D厚涂韩漫</span>', rendered)
+        self.assertIn('[2D厚涂韩漫] 高清商业条漫厚涂赛璐璐画风', rendered)
+        self.assertNotIn('<span class="tag">r2混合媒介</span>', rendered)
+
+        master = self.base / '.agents/skills/h3-storyboard-director/SKILL.md'
+        master.parent.mkdir(parents=True, exist_ok=True)
+        master.write_text('# master', encoding='utf-8')
+        skill_ask, _ = cps.create(self.base, '未选画风测试')
+        self.assertIn('画风尚未指定（建剧必问用户确认）', skill_ask.read_text(encoding='utf-8'))
+        skill_s2, _ = cps.create(self.base, '韩漫测试', genre='都市', style='S2')
+        self.assertIn('已锁定画风 `2D厚涂韩漫`', skill_s2.read_text(encoding='utf-8'))
+        skill_custom, _ = cps.create(self.base, '自定义测试', style='美式硬核暗黑美漫，粗犷阴影与红黑双色调', style_name='暗黑美漫')
+        self.assertIn('已锁定画风 `暗黑美漫`', skill_custom.read_text(encoding='utf-8'))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,14 +1,14 @@
-# 漫剧分镜导演 Skill · V3.1（`h3-storyboard-director`）
+# 经纬AI，一键漫剧创作skill · V3.1
 
-> **AI 漫剧全流程导演与多模型分镜编译 Skill · V3.1 公开首发版（持续更新中）**：
+> **经纬AI，一键漫剧创作skill（V3.1 公开首发版 · 持续更新中）**：
 > **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 画风锁与无损四视角资产 / 外化导演与三大模型高冲击编译 / 代码级反平淡机检与终审看板**。
 >
 > **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **八条创作硬约束** + **四道代码级「平淡度一票否决」机检** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与可视化 HTML 制作看板（零第三方 Python 依赖，开箱即用）。
 
 [![Version](https://img.shields.io/badge/Version-V3.1%20%E9%A6%96%E5%8F%91%E7%AC%AC%E4%B8%80%E7%89%88-f59e0b)](#)
-[![Models](https://img.shields.io/badge/Models-Wan3.0%20%7C%20SD2.0%20%7C%20H3-b4a2ff)](#四三套模型专属高冲击编译模具)
-[![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-快速安装零依赖)
-[![Status](https://img.shields.io/badge/Status-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD-6366f1)](#六持续更新路线)
+[![Models](https://img.shields.io/badge/Models-Wan3.0%20%7C%20SD2.0%20%7C%20H3-b4a2ff)](#-三三套模型专属高冲击编译模具头部减脂--动作权重优先)
+[![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-六快速安装零依赖)
+[![Status](https://img.shields.io/badge/Status-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD-6366f1)](#-八持续更新说明与开源致谢)
 
 ---
 
@@ -20,7 +20,7 @@
 3. **切模型失真**：Wan3.0（30s）、SD2.0（15s）、H3（4–15s）提示词脾气完全不同，换模型转写直接丢掉动作和金句；
 4. **画风写死或漂移**：新建项目套用固定画风，或跨镜头人脸与场景媒介分裂。
 
-**`h3-storyboard-director V3.1` 通过「一层共用爽剧母本 + 前置画风锁 + 三套模型减脂编译器 + 代码级一票否决门禁」，把下限直接锁死在中上商业水准。**
+**「经纬AI，一键漫剧创作skill」（V3.1）通过「一层共用爽剧母本 + 前置画风锁 + 三套模型减脂编译器 + 代码级一票否决门禁」，把下限直接锁死在中上商业水准。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
 
 ---
 
@@ -138,10 +138,10 @@ h3-storyboard-director/
 
 ```powershell
 # 方式一：使用 GitHub CLI 一键克隆到工作区
-gh repo clone 20321231788a-cmyk/h3-storyboard-director .agents/skills/h3-storyboard-director
+gh repo clone 20321231788a-cmyk/jingwei-ai-manju-skill .agents/skills/h3-storyboard-director
 
 # 方式二：解压 V3.1 发行版压缩包
-Expand-Archive -Path h3-storyboard-director-V3.1.zip -DestinationPath .agents/skills/h3-storyboard-director -Force
+Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.1.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
 ```
 
 运行离线自检（仅依赖 Python 标准库，无需 `pip install`）：

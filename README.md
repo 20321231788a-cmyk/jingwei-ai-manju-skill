@@ -174,5 +174,5 @@ python .agents/skills/h3-storyboard-director/scripts/test_build_board.py -v
 
 ## 🔄 八、持续更新说明与开源致谢
 
-- **版本说明**：**V3.1** 为公开首发第一版，本技能将持续随视频模型能力（如 Seedance 2.5 等新模型接入、价格与平台适配、画质锁脸工作流优化）持续更新迭代。
+- **版本说明**：本技能将持续随视频模型能力持续更新迭代。
 - **方法借鉴与致谢**：部分戏剧工艺与冲突方法论借鉴了开源社区 [`short-drama-factory`](https://github.com/lixiaoxiao9888-create/short-drama-factory) 与 [`manju-laoli-skill`](https://github.com/lixiaoxiao9888-create/manju-laoli-skill) 的前置锁与质检思路，并结合本工作区“一层共用母本 + 多模型减脂编译器 + 一剧一看板”进行了独立重构。

@@ -1,13 +1,13 @@
-# 经纬AI，一键漫剧创作skill · V3.3
+# 经纬AI，一键漫剧创作skill · V3.5
 
-> **经纬AI，一键漫剧创作skill（V3.3 打戏专精强化版 · 持续更新中）**：
-> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 画风锁与无损四视角资产 / 三大打戏引擎与多模型高冲击编译 / 代码级反平淡与打戏防崩机检**。
+> **经纬AI，一键漫剧创作skill（V3.5 生图美学 & 交互看板精简版 · 持续更新中）**：
+> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 电影级生图美学与画风锁 / 三大打戏引擎与多模型高冲击编译 / 交互式终审看板与代码级双八门禁**。
 >
-> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **八条创作硬约束** + **八道代码级机检（4 道反平淡 + 4 道打戏防崩）** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与可视化 HTML 制作看板（零第三方 Python 依赖，开箱即用）。
+> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **电影级生图美学注入** + **八条创作硬约束** + **八道代码级机检（4 道反平淡 + 4 道打戏防崩）** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与交互式 HTML 制作看板（零第三方 Python 依赖，无冗余后置重加工，开箱即用）。
 
-[![Version](https://img.shields.io/badge/Version-V3.3%20%E6%89%93%E6%88%8F%E4%B8%93%E7%B2%BE%E7%89%88-f59e0b)](#)
+[![Version](https://img.shields.io/badge/Version-V3.5%20%E7%BE%8E%E5%AD%A6%E4%B8%8E%E7%9C%8B%E6%9D%BF%E5%8D%87%E7%BA%A7-f59e0b)](#)
 [![Models](https://img.shields.io/badge/Models-Wan3.0%20%7C%20SD2.0%20%7C%20H3-b4a2ff)](#-三三套模型专属高冲击编译模具头部减脂--动作权重优先)
-[![Combat](https://img.shields.io/badge/Combat-3%20Engines%20%2B%20Axis%20Lock-ef4444)](#-四三大打戏引擎与防崩机检scriptsaction-vfxmd--build_boardpy)
+[![Combat](https://img.shields.io/badge/Combat-3%20Engines%20%2B%20Axis%20Lock-ef4444)](#-2-三大打戏引擎与防崩策略action-vfxmd--build_boardpy)
 [![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-七快速安装零依赖)
 [![Status](https://img.shields.io/badge/Status-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD-6366f1)](#-九持续更新说明与开源致谢)
 
@@ -15,13 +15,13 @@
 
 ## 💡 核心理念：用户只给原件，AI 跑完百条导演与机检规则
 
-很多 AI 漫剧烧钱抽卡却依然“站桩念经、打戏融成残影”，根源在于：
+很多 AI 漫剧烧钱抽卡却依然“人设像证件照、背景像游客照、视频站桩念经、打戏融成残影”，根源在于：
 1. **死守原件水词**：不敢砍废话、不把危机前置到前 3 秒，照抄小说导致划走率爆表；
 2. **微表情陷阱**：低预算下让 AI 演“眼神微冷、手指轻攥”，抽卡 10 次也是面瘫站桩；
 3. **打戏喂撑与越轴**：在一镜里写“拳脚如雨、连招十余招”，视频模型必出多手多脚与左右乱跳；
-4. **切模型失真 & 画风漂移**：Wan3.0（30s）、SD2.0（15s）、H3（4–15s）格式互斥，转写即丢动作与金句；新建项目套用固定画风导致题材割裂。
+4. **生图缺电影美术指导 & 切模型失真**：人设用平光棚把立体感打平、背景要求全屏死锐拍出“游客照”，且切模型后丢动作与金句。
 
-**「经纬AI，一键漫剧创作skill」（V3.3）通过「一层共用爽剧母本 + 前置画风锁 + 三大打戏引擎 + 三套模型减脂编译器 + 代码级双八门禁」，把下限直接锁死在中上商业水准。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
+**「经纬AI，一键漫剧创作skill」（V3.5）通过「一层共用爽剧母本 + 电影级生图美学配方 + 前置画风锁 + 三大打戏引擎 + 三套模型减脂编译器 + 代码级双八门禁 + 交互式终审看板」，兼顾审美质感与高稳出片率，同时彻底清理旧接口历史包袱与额外后置图片缩放步骤。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
 
 ---
 
@@ -39,13 +39,14 @@
    ├── 强制爆点槽位：集级 thrill_plan（5要素+爽点强度1-10）+ 段级 dramatic_arc（三拍弧线）
    └── 外化动作红线：封杀微表情站桩，强制拍案震物、指鼻逼视、扣腕反压与大反差景别硬切
    │
-   ▼  【第三层：高精资产与三模型高冲击编译】 (delivery.md + model-routing.md)
-   ├── 资产锁定：分步生图 + stitch_character_sheet.py 无损拼接 3344×1882 四视角整图
+   ▼  【第三层：高审美资产与三模型高冲击编译】 (delivery.md + style-presets.md + model-routing.md)
+   ├── 电影级生图美学：三点雕塑棚拍布光（干净浅色底）+ 电影静帧色彩脚本（60-30-10）+ S1–S6生图配方
+   ├── 无损四视角资产：分步生图 + stitch_character_sheet.py 无损拼接 3344×1882 四视角整图（轻量直出）
    └── 一母本三模具：无损编译为 Wan3.0 (30s) / SD2.0 (15s) / H3 (4-15s) 头部减脂提示词
    │
-   ▼  【第四层：代码级反平淡机检与看板交付】 (h3-prompt-practice.md + build_board.py)
-   ├── 四道代码级「平淡度一票否决」机检 + 八条创作约束统一联审
-   └── 导出深色紫灰《打开看板.html》终审包（授权后经适配队列提交生成）
+   ▼  【第四层：代码级反平淡机检与交互式终审看板】 (h3-prompt-practice.md + build_board.py + episode-board.html)
+   ├── 八道代码级门禁（4道反平淡 + 4道打戏防崩）+ 八条创作约束统一联审
+   └── 导出交互式《打开看板.html》（原地高清灯箱 / 展开全部 / ←→切镜 / 单镜审阅 / 一键复制提示词）
 ```
 
 ---
@@ -92,9 +93,16 @@
 
 ---
 
-## ⚔️ 四、三大打戏引擎与防崩机检（`action-vfx.md` + `build_board.py`）
+## ✨ 四、V3.5 新增亮点：电影级生图美学 + 交互看板 + 轻量瘦身
 
-针对 AI 视频模型对连续高速搏击易穿模的物理特性，V3.3 新增三套高出片率打戏引擎与四道代码级防崩拦截：
+### 1. 电影级生图美学引擎（从源头告别平光证件照与游客照）
+- **人物四视角设定（`delivery.md` + `style-presets.md`）**：固定干净低饱和浅色棚底衬托立体轮廓，禁用发灰平光；强制 **45° 柔和塑形主光 + 发丝/肩线轮廓逆光 + 通透双点眼神光**，每套衣装写清 2–3 种材质对比与视觉记忆点，配角/中老年保留真实骨相的同时去土气、去廉价塑料感。
+- **无人物电影静帧场景**：摒弃“平视游客照 / 售楼处效果图”与全屏同等死锐碎噪点，改用 **35mm/50mm 光学景深 + 极前景微虚化框景 + 60-30-10 冷暖色彩脚本 + 年代包浆置景陈设**（招牌/幌幡强制手写毛笔书法质感），直接套用 `S1–S6` 专属生图美学配方。
+- **轻量原则**：直接优化提示词美学源头，**剔除额外后置放大流程与繁琐卡点**，原有看图确认保持高效轻量。
+
+### 2. 三大打戏引擎与防崩策略（`action-vfx.md` + `build_board.py`）
+
+针对 AI 视频模型对连续高速搏击易穿模的物理特性，内置三套高出片率打戏引擎与四道代码级防崩拦截：
 
 | 引擎代号 (`combat_mode`) | 适用打戏类型 | 防崩核心策略（低成本少抽卡一次过） |
 | --- | --- | --- |
@@ -129,23 +137,23 @@
 
 ```text
 h3-storyboard-director/
-├── SKILL.md                          # 总控入口：V3.3 八条创作约束、工作方式与制作边界
+├── SKILL.md                          # 总控入口：V3.5 八条创作约束、工作方式与制作边界
 ├── README.md                         # 本说明文档
 ├── agents/
 │   └── openai.yaml                   # Agent 元数据与默认触发提示词
 ├── references/                       # 7 份核心规则库
-│   ├── style-presets.md              # 6大内置主流画风预设库 + 未指定必提问画风锁
+│   ├── style-presets.md              # 6大内置主流画风预设库 + 生图美学注入配方 + 画风锁
 │   ├── directing.md                  # 爽点提纯引擎、thrill_plan/dramatic_arc、外化动作与三段式对话
-│   ├── model-routing.md              # Wan3.0(30s) / SD2.0(15s) / H3(4-15s) 切分铁律、打戏密度红线与模具
+│   ├── model-routing.md              # Wan3.0(30s) / SD2.0(15s) / H3(4-15s) 切分铁律、打戏红线与通用接口边界
 │   ├── action-vfx.md                 # 三大打戏引擎、攻防轴线锁、顿帧四层音效与修仙特效美术分层
 │   ├── h3-prompt-practice.md         # 提示词写法规范与「平淡度一票否决」八项对照审核
-│   ├── delivery.md                   # 素材标准、同一数据源、一剧一看板与队列提交规范
+│   ├── delivery.md                   # 生图美学与材质标准、同一数据源、交互看板与提交规范（精简去旧接口）
 │   └── project-skills.md             # 作品专属技能创建、画风锁继承与续作路由机制
 ├── assets/
 │   ├── production-template.json      # 含 style_name / thrill_plan 的制作数据起步模板
-│   ├── episode-board.html            # 深色紫灰终审看板样式模板
+│   ├── episode-board.html            # 交互式深色终审看板模板（灯箱/全览/←→切镜/单镜审阅打勾）
 │   ├── character-reference-layout-r2.png  # 16:9 角色四视角设定图排版母版
-│   └── laoli-MIT.txt                 # 历史工作台模板 MIT 许可保留文件
+│   └── laoli-MIT.txt                 # 基础看板样式 MIT 许可保留文件
 └── scripts/                          # 4 套零依赖 Python 标准库脚本
     ├── build_board.py                # 制作数据硬门禁机检 + HTML 终审看板导出器
     ├── create_project_skill.py       # 一键创建新作品专属技能（含 --style 画风锁）与独立看板启动器
@@ -163,8 +171,8 @@ h3-storyboard-director/
 # 方式一：使用 GitHub CLI 一键克隆到工作区
 gh repo clone 20321231788a-cmyk/jingwei-ai-manju-skill .agents/skills/h3-storyboard-director
 
-# 方式二：解压 V3.3 发行版压缩包
-Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.3.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
+# 方式二：解压 V3.5 发行版压缩包
+Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.5.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
 ```
 
 运行离线自检（仅依赖 Python 标准库，无需 `pip install`）：

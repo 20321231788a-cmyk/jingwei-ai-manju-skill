@@ -572,7 +572,7 @@ def render(data, base, output, warnings):
                 parts.append(paragraph(label, plan[key]))
     if wan:
         configured = any((u.get('generation', {}).get('protocol') in ('doubao-canvas-v1', 'scenora-v1')) if seedance else (u.get('generation', {}).get('protocol') in ('wan-portal-v1', 'scenora-v1')) for u in units)
-        parts.append(paragraph('生成状态', '已配置 Seedance 2.0 接口的分镜可在制作工作台提交，任务与成片也在工作台查看。' if seedance and configured else 'Wan3分镜与提示词可在工作台原位编辑；已接入万万工作台，任务状态见工作台。' if configured else '当前模型尚未配置提交接口，提交禁用。'))
+        parts.append(paragraph('生成状态', '已配置 Seedance 2.0 接口的分镜可在制作工作台提交，任务与成片也在工作台查看。' if seedance and configured else 'Wan3分镜与提示词可在工作台原位编辑；已配置提交接口，任务与成片见工作台。' if configured else '当前模型尚未配置提交接口，提交禁用。'))
         parts.append('<details><summary>原分镜与独立片头对照（原ID及H3正文保留在制作数据中）</summary>' + ''.join(paragraph(u['id'], f'{u["title"]} · 原{u["duration_s"]}秒') for u in data['units']) + '</details>')
     for item in data.get('pending_items', []):
         parts.append(paragraph('待用户决定', item))

@@ -1,12 +1,133 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><!-- 分镜正文模板；配色与交互风格适配用户提供的20261103制作看板源码。 --><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><!-- 经纬AI 分镜终审看板模板（V3.5：深色紫灰配色、原地灯箱、展开全部、键盘切镜与单镜审阅） --><style>
 :root{color-scheme:dark;--bg:#16171e;--panel:#1e2029;--border:#373a4b;--text:#eeedf6;--muted:#aaaabd;--accent:#b4a2ff;font:14px/1.8 "Segoe UI","Microsoft YaHei",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}main{max-width:1320px;margin:auto;padding:24px}header,.note,article{padding:22px;border:1px solid var(--border);background:var(--panel);border-radius:12px;margin-bottom:18px}h1{font-size:28px;line-height:1.4;margin:10px 0 18px}h2{font-size:22px;margin:8px 0 18px}small,.muted,figcaption{color:var(--muted)}a{color:var(--accent);text-underline-offset:4px}.tag{display:inline-block;border:1px solid #504863;border-radius:20px;padding:2px 12px;margin:3px;font-size:12px}nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}main>nav{position:sticky;top:0;z-index:2;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--border)}nav a{display:inline-block;text-decoration:none;border:1px solid #625483;border-radius:6px;padding:4px 12px;background:#343044}nav a[aria-current=true]{background:#605077;color:white}.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}figure{margin:0}img{display:block;width:100%;height:190px;object-fit:contain;background:#11121a;border:1px solid var(--border);border-radius:8px}figcaption{font-size:12px;padding:8px 0}p{overflow-wrap:anywhere;margin:12px 0}p strong{color:#cdbdf6}ul{padding:0;list-style:none;border:1px solid var(--border);border-radius:8px;overflow:hidden}li{padding:9px 14px;border-bottom:1px solid var(--border)}li:nth-child(even){background:#252631}li:last-child{border:0}blockquote{margin:12px 0;padding:12px 18px;border-left:3px solid var(--accent);background:#2e2944}details{margin-top:20px;border-top:1px solid var(--border);padding-top:12px}summary{cursor:pointer;color:var(--accent);padding:8px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#11121a;padding:18px;border:1px solid var(--border);border-radius:8px;font:13px/1.8 Consolas,monospace}button{background:#8e8ae7;color:#fff;border:0;border-radius:7px;padding:10px 16px;font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}footer{padding:12px 0}
+.board-nav-tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.board-tool-btn{background:#292738;border:1px solid #595075;color:#ddd8f0;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer}
+.board-tool-btn[aria-pressed=true],.board-tool-btn.accent{background:#605077;color:#fff;border-color:#9b88da}
+.shot-head-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.review-pill{background:#292738;border:1px solid #4e4964;color:var(--muted);border-radius:999px;padding:2px 11px;font-size:12px;cursor:pointer}
+.review-pill[data-review=ok]{background:#1f3b31;border-color:#4b9e7e;color:#9de7c8}
+.review-pill[data-review=fix]{background:#403224;border-color:#b38348;color:#f5cd93}
+main>nav a[data-review=ok]{border-color:#4b9e7e}main>nav a[data-review=ok]::after{content:" ✓";color:#9de7c8}
+main>nav a[data-review=fix]{border-color:#c48b48}main>nav a[data-review=fix]::after{content:" !";color:#f5cd93}
+.frames figure img{cursor:zoom-in;transition:border-color .15s}.frames figure a:hover img{border-color:var(--accent)}
+.board-lightbox{position:fixed;inset:0;z-index:999;background:rgba(10,11,16,.93);display:flex;flex-direction:column;padding:16px}
+.board-lightbox-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.board-lightbox-title{font-size:13px;color:var(--text);margin-right:auto;overflow-wrap:anywhere}
+.board-lightbox-meta{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.board-lightbox-stage{flex:1;min-height:0;overflow:auto;display:grid;place-items:center;padding:12px}
+.board-lightbox-stage img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;border:1px solid var(--border);border-radius:8px;cursor:zoom-in;background:#0c0d12}
+.board-lightbox-stage.zoomed{display:block;text-align:center}.board-lightbox-stage.zoomed img{max-width:none;max-height:none;cursor:zoom-out}
+.board-lightbox .board-tool-btn{padding:6px 12px}
 .chinese-shots{margin-block:24px}.chinese-shots h3{font-size:18px;margin:24px 0 12px}.chinese-shots h4{color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums;margin:24px 0 8px}.chinese-shots p{max-width:78ch;line-height:1.95;margin:8px 0 18px}
 @media(max-width:650px){main{padding:12px}header,.note,article{padding:16px}h1{font-size:23px}.frames{grid-template-columns:1fr}img{height:auto;max-height:260px}main>nav{position:static}}
-@media print{body{background:white;color:black}main>nav,button{display:none}article[hidden]{display:block!important}header,.note,article{break-inside:avoid;background:white;color:black}pre{color:black;background:#eee}}
+@media print{body{background:white;color:black}main>nav,button,.board-nav-tools,.review-pill,.board-lightbox{display:none!important}article[hidden]{display:block!important}header,.note,article{break-inside:avoid;background:white;color:black}pre{color:black;background:#eee}}
 </style></head><body><script>
 async function copyPrompt(btn){const t=btn.parentElement.querySelector('pre').textContent;try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();const ok=document.execCommand('copy');a.remove();if(!ok){btn.textContent='请选中正文复制';return}}btn.textContent='已复制';setTimeout(()=>btn.textContent='复制完整提示词',1800)}
-function selectShot(){const cards=[...document.querySelectorAll('article')];const key=location.hash.slice(1);const chosen=cards.find(c=>c.id===key)||cards[0];cards.forEach(c=>c.hidden=c!==chosen);document.querySelectorAll('main>nav a').forEach(a=>a.setAttribute('aria-current',String(a.hash==='#'+chosen?.id)))}
+let boardShowAll=false;
+const reviewLabels={'':'○ 未审',ok:'✓ 已审',fix:'⚠ 待改'},reviewCycle=['','ok','fix'];
+const boardReviewStore=(()=>{
+ const key='board.review.'+document.title;
+ function load(){try{return JSON.parse(localStorage.getItem(key)||'{}')}catch{return {}}}
+ function saveLocal(map){try{localStorage.setItem(key,JSON.stringify(map))}catch{}}
+ const state={map:load(),setRemote:null};
+ function syncUI(uid){
+  const v=state.map[uid]||'';
+  const nav=[...document.querySelectorAll('main>nav a')].find(a=>a.getAttribute('href')==='#'+uid);if(nav){if(v)nav.dataset.review=v;else nav.removeAttribute('data-review');}
+  const btn=document.getElementById(uid)?.querySelector('.review-pill');if(btn){btn.dataset.review=v;btn.textContent=reviewLabels[v];}
+ }
+ function applyAll(map){state.map={...map};document.querySelectorAll('main>article').forEach(a=>syncUI(a.id));}
+ async function cycle(uid){
+  const cur=state.map[uid]||'';const next=reviewCycle[(reviewCycle.indexOf(cur)+1)%reviewCycle.length];
+  if(next)state.map[uid]=next;else delete state.map[uid];
+  syncUI(uid);saveLocal(state.map);
+  if(state.setRemote)try{await state.setRemote(uid,next)}catch{}
+ }
+ function counts(){const cards=[...document.querySelectorAll('main>article')];let ok=0,fix=0;cards.forEach(a=>{const v=state.map[a.id];if(v==='ok')ok++;else if(v==='fix')fix++;});return {total:cards.length,ok,fix};}
+ return {state,applyAll,cycle,syncUI,counts};
+})();
+window.__boardReview=boardReviewStore;
+function selectShot(){
+ const cards=[...document.querySelectorAll('main>article')];const key=location.hash.slice(1);const chosen=cards.find(c=>c.id===key)||cards[0];
+ cards.forEach(c=>c.hidden=!boardShowAll&&c!==chosen);
+ document.querySelectorAll('main>nav a').forEach(a=>a.setAttribute('aria-current',String(a.hash==='#'+chosen?.id)));
+ if(boardShowAll&&key&&chosen)chosen.scrollIntoView({behavior:'smooth',block:'start'});
+}
+(function setupBoardTools(){
+ const nav=document.querySelector('main>nav');
+ if(nav){
+  const tools=document.createElement('div');tools.className='board-nav-tools';
+  const toggleBtn=document.createElement('button');toggleBtn.type='button';toggleBtn.className='board-tool-btn';toggleBtn.id='board-toggle-all';toggleBtn.textContent='展开全部';toggleBtn.setAttribute('aria-pressed','false');
+  toggleBtn.addEventListener('click',()=>{boardShowAll=!boardShowAll;toggleBtn.textContent=boardShowAll?'单镜视图':'展开全部';toggleBtn.setAttribute('aria-pressed',String(boardShowAll));selectShot();});
+  tools.append(toggleBtn);nav.append(tools);
+ }
+ document.querySelectorAll('main>article').forEach(card=>{
+  const small=card.querySelector(':scope>small');if(!small)return;
+  const bar=document.createElement('div');bar.className='shot-head-bar';small.before(bar);bar.append(small);
+  const pill=document.createElement('button');pill.type='button';pill.className='review-pill';pill.dataset.review=boardReviewStore.state.map[card.id]||'';pill.textContent=reviewLabels[pill.dataset.review];
+  pill.addEventListener('click',()=>boardReviewStore.cycle(card.id));
+  bar.append(pill);boardReviewStore.syncUI(card.id);
+ });
+ const lb=document.createElement('div');lb.className='board-lightbox';lb.hidden=true;
+ const bar=document.createElement('div');bar.className='board-lightbox-bar';
+ const lbTitle=document.createElement('span');lbTitle.className='board-lightbox-title';
+ const lbMeta=document.createElement('span');lbMeta.className='board-lightbox-meta';
+ const lbZoom=document.createElement('button');lbZoom.type='button';lbZoom.className='board-tool-btn';lbZoom.textContent='100% 原始尺寸';
+ const lbRedraw=document.createElement('button');lbRedraw.type='button';lbRedraw.className='board-tool-btn';lbRedraw.textContent='复制重画指令';
+ const lbRaw=document.createElement('a');lbRaw.className='board-tool-btn';lbRaw.target='_blank';lbRaw.rel='noopener';lbRaw.textContent='新标签打开';
+ const lbPrev=document.createElement('button');lbPrev.type='button';lbPrev.className='board-tool-btn';lbPrev.textContent='← 上一张';
+ const lbNext=document.createElement('button');lbNext.type='button';lbNext.className='board-tool-btn';lbNext.textContent='下一张 →';
+ const lbClose=document.createElement('button');lbClose.type='button';lbClose.className='board-tool-btn';lbClose.textContent='关闭 (Esc)';
+ bar.append(lbTitle,lbMeta,lbPrev,lbNext,lbZoom,lbRedraw,lbRaw,lbClose);
+ const stage=document.createElement('div');stage.className='board-lightbox-stage';
+ const lbImg=document.createElement('img');lbImg.alt='参考图预览';stage.append(lbImg);
+ lb.append(bar,stage);document.body.append(lb);
+ let lbItems=[],lbIdx=0;
+ function showItem(i){
+  if(!lbItems.length)return;lbIdx=(i+lbItems.length)%lbItems.length;const it=lbItems[lbIdx];
+  stage.classList.remove('zoomed');lbZoom.textContent='100% 原始尺寸';
+  lbTitle.textContent=it.caption;lbRaw.href=it.href;lbMeta.textContent=(lbIdx+1)+'/'+lbItems.length;
+  lbImg.onload=()=>{lbMeta.textContent=(lbIdx+1)+'/'+lbItems.length+' · '+lbImg.naturalWidth+'×'+lbImg.naturalHeight;};
+  lbImg.src=it.href;lb.hidden=false;
+ }
+ function closeLb(){lb.hidden=true;lbImg.removeAttribute('src');}
+ lbImg.addEventListener('click',()=>{stage.classList.toggle('zoomed');lbZoom.textContent=stage.classList.contains('zoomed')?'适应屏幕':'100% 原始尺寸';});
+ lbZoom.addEventListener('click',()=>lbImg.click());
+ lbPrev.addEventListener('click',()=>showItem(lbIdx-1));
+ lbNext.addEventListener('click',()=>showItem(lbIdx+1));
+ lbClose.addEventListener('click',closeLb);
+ stage.addEventListener('click',e=>{if(e.target===stage)closeLb();});
+ lbRedraw.addEventListener('click',async()=>{
+  const it=lbItems[lbIdx];if(!it)return;
+  const cmd='请依据当前《delivery.md》和《style-presets.md》审美规范重画参考图（'+it.caption+'），保持角色身份/空间透视一致，重点强化电影级光影立体感与材质细节，重画后更新绑定并核验。';
+  try{await navigator.clipboard.writeText(cmd);lbRedraw.textContent='已复制重画指令';setTimeout(()=>lbRedraw.textContent='复制重画指令',1800);}catch{prompt('复制重画指令：',cmd);}
+ });
+ document.querySelector('main')?.addEventListener('click',e=>{
+  const link=e.target.closest('.frames figure a');if(!link||!link.querySelector('img'))return;
+  e.preventDefault();
+  const scope=boardShowAll?document.querySelector('main'):link.closest('main>article')||document.querySelector('main');
+  const links=[...scope.querySelectorAll('.frames figure a')].filter(a=>a.querySelector('img'));
+  lbItems=links.map(a=>({href:a.getAttribute('href'),caption:a.closest('figure')?.querySelector('figcaption')?.textContent||a.querySelector('img')?.alt||'参考图'}));
+  const idx=Math.max(0,links.indexOf(link));showItem(idx);
+ });
+ addEventListener('keydown',e=>{
+  if(!lb.hidden){
+   if(e.key==='Escape'){closeLb();return;}
+   if(e.key==='ArrowLeft'){e.preventDefault();showItem(lbIdx-1);return;}
+   if(e.key==='ArrowRight'){e.preventDefault();showItem(lbIdx+1);return;}
+   if(e.key==='z'||e.key==='Z'){lbImg.click();return;}
+   return;
+  }
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target?.tagName||''))return;
+  if(!boardShowAll&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){
+   const cards=[...document.querySelectorAll('main>article')];if(cards.length<2)return;
+   const key=location.hash.slice(1);const cur=Math.max(0,cards.findIndex(c=>c.id===key));
+   const next=e.key==='ArrowLeft'?Math.max(0,cur-1):Math.min(cards.length-1,cur+1);
+   if(next!==cur){e.preventDefault();location.hash='#'+cards[next].id;}
+  }
+ });
+})();
 addEventListener('hashchange',selectShot);selectShot();
 addEventListener('beforeprint',()=>document.querySelectorAll('details').forEach(d=>{d.dataset.printOpen=d.open;d.open=true}));addEventListener('afterprint',()=>document.querySelectorAll('details').forEach(d=>d.open=d.dataset.printOpen==='true'));
 </script></body></html>

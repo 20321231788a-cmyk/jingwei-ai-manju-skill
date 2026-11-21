@@ -1,0 +1,16 @@
+/* Preserve the existing board's typography, reference figures and shot layout. */
+.board-embedded main>nav{max-height:138px;overflow:auto;margin-top:0;scrollbar-width:thin;scrollbar-color:#4b485e transparent;align-items:center}
+.board-batch-sync-box{margin:10px 0}
+.board-editable{white-space:pre-wrap;caret-color:var(--accent);border-radius:3px;min-width:1em;outline:none}
+.board-editable:hover{background:#302b3d}.board-editable:focus{background:#272331;outline:1px solid var(--accent);outline-offset:4px}
+.board-editable:empty:before{content:attr(data-placeholder);color:var(--muted);pointer-events:none}
+span.board-editable{display:inline;box-decoration-break:clone}h2.board-editable{display:block}
+[data-inline-field="duration_s"]{display:inline-block!important;min-width:1.8em;text-align:center;font-variant-numeric:tabular-nums}
+.board-edit-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.board-edit-toolbar button{font-size:12px;padding:7px 12px;border:1px solid #555363;background:#30303d;color:var(--text)}
+.board-edit-toolbar button:first-child{background:#a89ae9;color:#191526;border-color:transparent}.board-edit-toolbar button:hover:not(:disabled){filter:brightness(1.15)}.board-edit-toolbar button:disabled{opacity:.45;cursor:not-allowed}
+.board-edit-status{font-size:12px;color:var(--muted);margin:8px 0 18px}.board-edit-status.pending{color:#edc48c}
+.board-dialogue{margin:12px 0;padding:12px 18px;background:#2e2944;line-height:1.9;white-space:pre-wrap;min-height:44px}
+.board-sync-text{display:block;width:100%;min-height:110px;background:#11121a;color:var(--text);font:inherit;border:1px solid var(--border);padding:12px}
+.chinese-shots [data-description-intro][data-empty="true"]:empty{display:none}
+@media(max-width:650px){.board-editable{font-size:16px}.board-edit-toolbar button{min-height:40px}.board-edit-toolbar{gap:6px}.board-embedded main>nav{position:sticky;max-height:108px}}
+@media print{.board-edit-toolbar,.board-edit-status,.board-sync-text{display:none}.board-editable{outline:0!important;background:transparent!important}}

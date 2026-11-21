@@ -117,6 +117,11 @@
 - **顿帧感（Hit-stop）+ 四层战斗音效**：命中瞬间强制写明“接触短暂停顿压实 + 火星/气浪炸开 + 短促微震回稳 + 撞物破坏”，音效落到**起势破风 → 接触爆裂 → 环境破坏 → 余波死寂接金句**四层（禁写“激烈打斗声”）。
 - **分模型打斗回合上限**：`Wan3.0 (30s)` 硬限 3–4 个回合、最多 7 镜；`SD2.0 (15s)` 硬限 1–2 个回合、最多 4 镜；`H3` 专注 1 个核心接触点。
 
+### 4. 本地可视制作工作台同步打包（`tools/studio/`）
+- **真接口配置与向上游拉取模型**：接口配置面板精简为「名称 / 接口地址 / 模型 / 分辨率」，移除冗余协议下拉框并根据上游地址自动匹配适配策略；支持点击直接向上游拉取可用模型列表，已保存接口支持一键删除。
+- **密钥加密持久化保存**：支持直接填入接口密钥并持久保存（Windows 下使用 DPAPI 本机加密落盘），替代旧的临时内存存储机制。
+- **剧本页直达提交与全流程闭环**：剧本区新增 **「提交本分镜生成」** 与 **「提交本集生成」** 双按钮，并与资产图核对、视频版本播放标星、混剪时间轴拼接及 `.srt` 字幕一键导出打通，支持 `requirements.txt`（`requests` / `Pillow` / `imageio-ffmpeg`）本地一键启动。
+
 ---
 
 ## 🛡️ 五、八道代码级机检门禁（4 道反平淡 + 4 道打戏防崩）
@@ -163,27 +168,45 @@ h3-storyboard-director/
     ├── create_project_skill.py       # 一键创建新作品专属技能（含 --style 画风锁）与独立看板启动器
     ├── stitch_character_sheet.py     # 四视角人设图无损拼接器（输出 3344×1882 / 3840×2160）
     └── test_build_board.py           # 15 项自动化单元测试套件
+
+# 随仓附带本地可视制作工作台（使用时部署到工作区根目录 tools/）：
+tools/
+├── studio/                           # 本地可视制作工作台与队列提交服务（server.py / upstream.py / web/ 等 32 个源文件与测试）
+│   ├── README.md                     # 工作台独立说明
+│   └── requirements.txt              # requests / imageio-ffmpeg / Pillow
+└── rb_video_queue/
+    ├── runtime.py                    # 队列原子读写与设置辅助（纯 Python 标准库）
+    └── submission_priority.py        # 队列优先级与并发调度规则
 ```
 
 ---
 
-## 📦 七、快速安装（零依赖）
+## 📦 七、快速安装（核心技能零依赖 · 附带工作台）
 
-将本技能置于工作区的 `.agents/skills/h3-storyboard-director` 目录，即可被 **Antigravity / Codex / Claude Code** 等主流 Agent 自动挂载：
+将技能目录置于工作区的 `.agents/skills/h3-storyboard-director`，并将仓库内的 `tools/` 目录部署到工作区根目录 `<工作区>/tools/`，即可被 **Antigravity / Codex / Claude Code** 等主流 Agent 自动挂载并配合本地工作台使用：
 
 ```powershell
-# 方式一：使用 GitHub CLI 一键克隆到工作区
+# 方式一：使用 GitHub CLI 克隆仓库，并同步部署工作区 tools/
 gh repo clone 20321231788a-cmyk/jingwei-ai-manju-skill .agents/skills/h3-storyboard-director
+Copy-Item -Recurse -Force .agents/skills/h3-storyboard-director/tools ./tools
 
-# 方式二：解压 V3.6 发行版压缩包
+# 方式二：解压 V3.6 发行版压缩包并部署 tools/
 Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.6.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
+Copy-Item -Recurse -Force .agents/skills/h3-storyboard-director/tools ./tools
 ```
 
-运行离线自检（仅依赖 Python 标准库，无需 `pip install`）：
+运行离线自检（核心技能仅依赖 Python 标准库，无需 `pip install`）：
 
 ```powershell
 python .agents/skills/h3-storyboard-director/scripts/test_build_board.py -v
 # Expected: Ran 15 tests ... OK
+```
+
+如需启用本地工作台提交与混剪导出，安装工作台依赖后运行单元测试或启动工作台：
+
+```powershell
+pip install -r tools/studio/requirements.txt
+python -m unittest discover -s tools/studio -p "test_*.py"
 ```
 
 ---

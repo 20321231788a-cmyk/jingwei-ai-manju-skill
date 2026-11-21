@@ -328,6 +328,40 @@ class BoardTests(unittest.TestCase):
         errs, _ = board.validate(no_impact, self.base, True)
         self.assertTrue(any('受击物理反馈' in e for e in errs))
 
+    def test_seedance25_merged_header_renders_single_group_jump_button(self):
+        data = fixture(self.base)
+        data['active_model'] = 'seedance2'
+        sd_units = []
+        for idx in range(1, 3):
+            u = deepcopy(data['units'][0])
+            u.pop('prompt', None); u.pop('prompt_zh', None)
+            u.update(
+                id=f'DB{idx:03d}', model='seedance2', duration_s=15,
+                directing_summary=f'第{idx}段。',
+                prompt_text=f'15秒，16:9。\n@图片1。\n0–15秒。甲伸手推进。',
+                dialogue_events=[{'start_s': 0.5, 'end_s': 2.0, 'line': '开始', 'text': '开始', 'performance': '开口'}],
+                shots=[{'number': 1, 'start_s': 0, 'end_s': 15, 'description': '甲伸手。'}],
+            )
+            sd_units.append(u)
+        data['seedance_groups'] = sd_units
+        data['seedance25_groups'] = [{
+            **deepcopy(sd_units[0]),
+            'id': f'SD25-{k:02d}',
+            'model': 'seedance25',
+            'duration_s': 30,
+            'source_units': ['DB001', 'DB002'],
+            'shots': [{'number': 1, 'start_s': 0, 'end_s': 30, 'description': '合并动作。'}],
+            'prompt_text': '30秒，16:9。\n@图片1。\n0–30秒。连续推进。',
+        } for k in range(1, 13)]
+        out_html = self.base / 'board_out.html'
+        rendered = board.render(data, self.base, out_html, [])
+        header = re.search(r'<header>.*?</header>', rendered, re.S).group(0)
+        self.assertEqual(header.count('Seedance 2.5 · 30秒合并版'), 1)
+        self.assertEqual(header.count('Seedance 2.0 · 15秒原版'), 1)
+        self.assertIn('data-group-jump="seedance25"', header)
+        self.assertIn('data-board-group="seedance25"', rendered)
+        self.assertIn('data-board-group="current"', rendered)
+
 
 if __name__ == '__main__':
     unittest.main()

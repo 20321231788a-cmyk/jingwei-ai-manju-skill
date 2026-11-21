@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><!-- 经纬AI 分镜终审看板模板（V3.5：深色紫灰配色、原地灯箱、展开全部、键盘切镜与单镜审阅） --><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><!-- 经纬AI 分镜终审看板模板（V3.6：深色紫灰配色、原地灯箱、展开全部、键盘切镜、多版本分组切换与单镜审阅） --><style>
 :root{color-scheme:dark;--bg:#16171e;--panel:#1e2029;--border:#373a4b;--text:#eeedf6;--muted:#aaaabd;--accent:#b4a2ff;font:14px/1.8 "Segoe UI","Microsoft YaHei",sans-serif}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}main{max-width:1320px;margin:auto;padding:24px}header,.note,article{padding:22px;border:1px solid var(--border);background:var(--panel);border-radius:12px;margin-bottom:18px}h1{font-size:28px;line-height:1.4;margin:10px 0 18px}h2{font-size:22px;margin:8px 0 18px}small,.muted,figcaption{color:var(--muted)}a{color:var(--accent);text-underline-offset:4px}.tag{display:inline-block;border:1px solid #504863;border-radius:20px;padding:2px 12px;margin:3px;font-size:12px}nav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}main>nav{position:sticky;top:0;z-index:2;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--border)}nav a{display:inline-block;text-decoration:none;border:1px solid #625483;border-radius:6px;padding:4px 12px;background:#343044}nav a[aria-current=true]{background:#605077;color:white}.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:16px 0}figure{margin:0}img{display:block;width:100%;height:190px;object-fit:contain;background:#11121a;border:1px solid var(--border);border-radius:8px}figcaption{font-size:12px;padding:8px 0}p{overflow-wrap:anywhere;margin:12px 0}p strong{color:#cdbdf6}ul{padding:0;list-style:none;border:1px solid var(--border);border-radius:8px;overflow:hidden}li{padding:9px 14px;border-bottom:1px solid var(--border)}li:nth-child(even){background:#252631}li:last-child{border:0}blockquote{margin:12px 0;padding:12px 18px;border-left:3px solid var(--accent);background:#2e2944}details{margin-top:20px;border-top:1px solid var(--border);padding-top:12px}summary{cursor:pointer;color:var(--accent);padding:8px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#11121a;padding:18px;border:1px solid var(--border);border-radius:8px;font:13px/1.8 Consolas,monospace}button{background:#8e8ae7;color:#fff;border:0;border-radius:7px;padding:10px 16px;font:inherit;cursor:pointer}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}[hidden]{display:none!important}footer{padding:12px 0}
 .board-nav-tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -48,10 +48,28 @@ const boardReviewStore=(()=>{
 })();
 window.__boardReview=boardReviewStore;
 function selectShot(){
- const cards=[...document.querySelectorAll('main>article')];const key=location.hash.slice(1);const chosen=cards.find(c=>c.id===key)||cards[0];
+ const cards=[...document.querySelectorAll('main>article')];const key=location.hash.slice(1);
+ let chosen=cards.find(c=>c.id===key);
+ if(!chosen&&key){
+  const anchor=document.getElementById(key),grp=anchor?.dataset?.boardGroup||(key==='seedance25'?'seedance25':key==='current-units'?'current':'');
+  if(grp)chosen=cards.find(c=>c.dataset.boardGroup===grp);
+ }
+ if(!chosen)chosen=cards[0];
+ const activeGroup=chosen?.dataset?.boardGroup||'';
+ const hasGroups=cards.some(c=>c.dataset.boardGroup);
  cards.forEach(c=>c.hidden=!boardShowAll&&c!==chosen);
+ if(hasGroups){
+  document.querySelectorAll('main>[data-board-group]:not(article)').forEach(el=>{
+   el.hidden=!boardShowAll&&!!activeGroup&&el.dataset.boardGroup!==activeGroup;
+  });
+  document.querySelectorAll('[data-group-jump]').forEach(a=>a.setAttribute('aria-current',String(a.dataset.groupJump===activeGroup)));
+  const tools=document.querySelector('.board-nav-tools');
+  const targetNav=boardShowAll?document.querySelector('main>nav'):document.querySelector(`main>nav[data-board-group="${activeGroup}"]`)||document.querySelector('main>nav');
+  if(tools&&targetNav&&tools.parentElement!==targetNav)targetNav.append(tools);
+ }
  document.querySelectorAll('main>nav a').forEach(a=>a.setAttribute('aria-current',String(a.hash==='#'+chosen?.id)));
  if(boardShowAll&&key&&chosen)chosen.scrollIntoView({behavior:'smooth',block:'start'});
+ else if(boardShowAll&&key==='current-units')document.getElementById('current-units')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 (function setupBoardTools(){
  const nav=document.querySelector('main>nav');

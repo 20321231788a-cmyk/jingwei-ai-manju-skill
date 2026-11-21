@@ -1,11 +1,11 @@
-# 经纬AI，一键漫剧创作skill · V3.5
+# 经纬AI，一键漫剧创作skill · V3.6
 
-> **经纬AI，一键漫剧创作skill（V3.5 生图美学 & 交互看板精简版 · 持续更新中）**：
-> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 电影级生图美学与画风锁 / 三大打戏引擎与多模型高冲击编译 / 交互式终审看板与代码级双八门禁**。
+> **经纬AI，一键漫剧创作skill（V3.6 多版本分组看板 & 电影美学精简版 · 持续更新中）**：
+> **1 总控入口（`SKILL.md`）+ 7 份核心规则库 + 4 套自动化 Python 脚本** · 四层纵深——**商业爽点提纯 / 电影级生图美学与画风锁 / 三大打戏引擎与多模型高冲击编译 / 多版本分组交互看板与代码级双八门禁**。
 >
-> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **电影级生图美学注入** + **八条创作硬约束** + **八道代码级机检（4 道反平淡 + 4 道打戏防崩）** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与交互式 HTML 制作看板（零第三方 Python 依赖，无冗余后置重加工，开箱即用）。
+> **画风锁（6 大内置主流画风 + 建剧未指定必提问自定义）** + **电影级生图美学注入** + **八条创作硬约束** + **八道代码级机检（4 道反平淡 + 4 道打戏防崩）** · 产出可直接投喂 **Wan 3.0（30s）/ Seedance 2.0（15s）/ MiniMax H3（4–15s）** 的高密度提示词与交互式 HTML 制作看板（零第三方 Python 依赖，开箱即用）。
 
-[![Version](https://img.shields.io/badge/Version-V3.5%20%E7%BE%8E%E5%AD%A6%E4%B8%8E%E7%9C%8B%E6%9D%BF%E5%8D%87%E7%BA%A7-f59e0b)](#)
+[![Version](https://img.shields.io/badge/Version-V3.6%20%E7%9C%8B%E6%9D%BF%E5%88%86%E7%BB%84%E4%B8%8E%E7%BE%8E%E5%AD%A6%E5%8D%87%E7%BA%A7-f59e0b)](#)
 [![Models](https://img.shields.io/badge/Models-Wan3.0%20%7C%20SD2.0%20%7C%20H3-b4a2ff)](#-三三套模型专属高冲击编译模具头部减脂--动作权重优先)
 [![Combat](https://img.shields.io/badge/Combat-3%20Engines%20%2B%20Axis%20Lock-ef4444)](#-2-三大打戏引擎与防崩策略action-vfxmd--build_boardpy)
 [![Python](https://img.shields.io/badge/Python-Stdlib%20Only%20(Zero%20Deps)-10b981)](#-七快速安装零依赖)
@@ -21,7 +21,7 @@
 3. **打戏喂撑与越轴**：在一镜里写“拳脚如雨、连招十余招”，视频模型必出多手多脚与左右乱跳；
 4. **生图缺电影美术指导 & 切模型失真**：人设用平光棚把立体感打平、背景要求全屏死锐拍出“游客照”，且切模型后丢动作与金句。
 
-**「经纬AI，一键漫剧创作skill」（V3.5）通过「一层共用爽剧母本 + 电影级生图美学配方 + 前置画风锁 + 三大打戏引擎 + 三套模型减脂编译器 + 代码级双八门禁 + 交互式终审看板」，兼顾审美质感与高稳出片率，同时彻底清理旧接口历史包袱与额外后置图片缩放步骤。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
+**「经纬AI，一键漫剧创作skill」（V3.6）通过「一层共用爽剧母本 + 电影级生图美学配方 + 前置画风锁 + 三大打戏引擎 + 三套模型减脂编译器 + 代码级双八门禁 + 多版本分组交互式终审看板」，兼顾审美质感与高稳出片率，同时彻底清理旧接口历史包袱与额外后置图片缩放步骤。**（内部技能目录名保留 `h3-storyboard-director` 以兼容既有项目引用）
 
 ---
 
@@ -93,14 +93,18 @@
 
 ---
 
-## ✨ 四、V3.5 新增亮点：电影级生图美学 + 交互看板 + 轻量瘦身
+## ✨ 四、V3.6 新增亮点：多版本分组交互看板 + 电影级生图美学
 
-### 1. 电影级生图美学引擎（从源头告别平光证件照与游客照）
+### 1. 多版本分组交互看板与审核体验升级（`build_board.py` + `episode-board.html`）
+- **合并版 / 原版单入口清洁切换**：当同一集同时包含合并版（如 30 秒合并版）与原版分镜时，头部只保留单一分组跳转按钮，杜绝多段重复标签刷屏。
+- **单镜分组视图隔离**：单镜浏览模式下只显示当前版本分组的导航与镜头，一键切版本自动切换分组导航条与顶部操作工具；切换至「展开全部」可同屏总览全集，继续配合原地高清灯箱、`←/→` 切镜、单镜审阅标星与一键复制提示词使用。
+
+### 2. 电影级生图美学引擎（从源头告别平光证件照与游客照）
 - **人物四视角设定（`delivery.md` + `style-presets.md`）**：固定干净低饱和浅色棚底衬托立体轮廓，禁用发灰平光；强制 **45° 柔和塑形主光 + 发丝/肩线轮廓逆光 + 通透双点眼神光**，每套衣装写清 2–3 种材质对比与视觉记忆点，配角/中老年保留真实骨相的同时去土气、去廉价塑料感。
 - **无人物电影静帧场景**：摒弃“平视游客照 / 售楼处效果图”与全屏同等死锐碎噪点，改用 **35mm/50mm 光学景深 + 极前景微虚化框景 + 60-30-10 冷暖色彩脚本 + 年代包浆置景陈设**（招牌/幌幡强制手写毛笔书法质感），直接套用 `S1–S6` 专属生图美学配方。
 - **轻量原则**：直接优化提示词美学源头，**剔除额外后置放大流程与繁琐卡点**，原有看图确认保持高效轻量。
 
-### 2. 三大打戏引擎与防崩策略（`action-vfx.md` + `build_board.py`）
+### 3. 三大打戏引擎与防崩策略（`action-vfx.md` + `build_board.py`）
 
 针对 AI 视频模型对连续高速搏击易穿模的物理特性，内置三套高出片率打戏引擎与四道代码级防崩拦截：
 
@@ -137,7 +141,7 @@
 
 ```text
 h3-storyboard-director/
-├── SKILL.md                          # 总控入口：V3.5 八条创作约束、工作方式与制作边界
+├── SKILL.md                          # 总控入口：V3.6 八条创作约束、工作方式与制作边界
 ├── README.md                         # 本说明文档
 ├── agents/
 │   └── openai.yaml                   # Agent 元数据与默认触发提示词
@@ -158,7 +162,7 @@ h3-storyboard-director/
     ├── build_board.py                # 制作数据硬门禁机检 + HTML 终审看板导出器
     ├── create_project_skill.py       # 一键创建新作品专属技能（含 --style 画风锁）与独立看板启动器
     ├── stitch_character_sheet.py     # 四视角人设图无损拼接器（输出 3344×1882 / 3840×2160）
-    └── test_build_board.py           # 14 项自动化单元测试套件
+    └── test_build_board.py           # 15 项自动化单元测试套件
 ```
 
 ---
@@ -171,15 +175,15 @@ h3-storyboard-director/
 # 方式一：使用 GitHub CLI 一键克隆到工作区
 gh repo clone 20321231788a-cmyk/jingwei-ai-manju-skill .agents/skills/h3-storyboard-director
 
-# 方式二：解压 V3.5 发行版压缩包
-Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.5.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
+# 方式二：解压 V3.6 发行版压缩包
+Expand-Archive -Path "经纬AI-一键漫剧创作skill-V3.6.zip" -DestinationPath .agents/skills/h3-storyboard-director -Force
 ```
 
 运行离线自检（仅依赖 Python 标准库，无需 `pip install`）：
 
 ```powershell
 python .agents/skills/h3-storyboard-director/scripts/test_build_board.py -v
-# Expected: Ran 14 tests ... OK
+# Expected: Ran 15 tests ... OK
 ```
 
 ---

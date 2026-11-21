@@ -17,6 +17,7 @@ FIELDS = ('subject_definitions', 'summary', 'retention_analysis',
 STATES = {'draft': '制作预览 · 尚未完成统一审阅',
           'reviewed': '已统一审阅 · 待用户终审',
           'user_approved': '用户已终审通过 · 视频状态见制作任务'}
+TEXT_MODELS = {'wan3': 'Wan3', 'seedance2': 'Seedance 2.0', 'seedance25': 'Seedance 2.5'}
 ASSETS = Path(__file__).resolve().parents[1] / 'assets'
 SHOT = re.compile(r'\[Shot (\d+)\](?:\s+At (\d{2}):([0-5]\d)\.(\d{3}),)?')
 
@@ -73,7 +74,7 @@ def display_units(data):
 
 
 def model_prompt(unit):
-    if unit.get('model') in ('wan3', 'seedance2'):
+    if unit.get('model') in TEXT_MODELS:
         return unit.get('prompt_text_en', '') if unit.get('prompt_language') == 'en' else unit.get('prompt_text', '')
     if unit.get('h3_layout') == 'two_complete_15s_blocks':
         return '\n------\n'.join('\n\n'.join(f'{f}:\n{seg.get("prompt", {}).get(f) or "待补"}' for f in FIELDS)
@@ -489,6 +490,12 @@ def validate(data, base, final=False, *, highlight_units=None):
     if data.get('active_model') == 'seedance2':
         seed_errors, seed_warnings = validate_text_groups(data, lookup, base, final, 'seedance2', 15, 'seedance_groups', 'Seedance 2.0')
         errors.extend(seed_errors); warnings.extend(seed_warnings)
+    if 'seedance25_groups' in data:
+        merge_errors, merge_warnings = validate_text_groups(
+            data, lookup, base, final, 'seedance25', 30, 'seedance25_groups', 'Seedance 2.5'
+        )
+        errors.extend(merge_errors)
+        warnings.extend(merge_warnings)
     thrill_errors, thrill_warnings = validate_thrill_and_anti_bland(data, highlight_units=highlight_units)
     errors.extend(thrill_errors); warnings.extend(thrill_warnings)
     combat_errors, combat_warnings = validate_combat_anti_collapse(data)
@@ -505,8 +512,8 @@ def paragraph(label, value):
 
 
 def render_chinese_shots(unit):
-    if unit.get('model') in ('wan3', 'seedance2'):
-        return '<section class="chinese-shots"><h3>' + ('Seedance 2.0' if unit.get('model') == 'seedance2' else 'Wan3') + '分镜（中文）</h3><p>' + esc(unit.get('prompt_text', '')).replace('\n', '<br>') + '</p></section>'
+    if unit.get('model') in TEXT_MODELS:
+        return '<section class="chinese-shots"><h3>' + TEXT_MODELS[unit['model']] + '分镜（中文）</h3><p>' + esc(unit.get('prompt_text', '')).replace('\n', '<br>') + '</p></section>'
     description = unit.get('prompt_zh', {}).get('detailed_description', '')
     parts = ['<section class="chinese-shots"><h3>H3镜头（中文）</h3>']
     if not text(description):
@@ -537,6 +544,7 @@ def render(data, base, output, warnings):
     units = display_units(data)
     wan = data.get('active_model') in ('wan3', 'seedance2')
     seedance = data.get('active_model') == 'seedance2'
+    merged = data.get('seedance25_groups', [])
     total = sum(u['duration_s'] for u in units)
     state = STATES[data['review_status']]
     used = {r for u in units for r in u.get('references', [])}
@@ -553,6 +561,11 @@ def render(data, base, output, warnings):
     for tag in (data['aspect_ratio'], style_tag, 'Seedance 2.0 · 图片参考 · 每段15秒' if seedance else 'Wan3 · 图片参考 · 每段30秒' if wan else 'MiniMax-H3 · 全能多模态参考' if video_count else 'MiniMax-H3 · 全能图片参考'):
         parts.append(f'<span class="tag">{esc(tag)}</span>')
     parts.append('<nav>')
+    if merged:
+        current_label = 'Seedance 2.0 · 15秒原版' if seedance else '现行分镜'
+        parts.append(f'<a href="#{esc(merged[0]["id"])}" data-group-jump="seedance25">Seedance 2.5 · 30秒合并版</a>')
+        first_cur = units[0]['id'] if units else 'current-units'
+        parts.append(f'<a href="#{esc(first_cur)}" data-group-jump="current">{current_label}</a>')
     for i, source in enumerate([data['source']] + data.get('additional_sources', []), 1):
         if resolve(base, source).is_file():
             parts.append(f'<a href="{esc(url(base, source, output))}">原件{i}</a>')
@@ -578,10 +591,25 @@ def render(data, base, output, warnings):
         parts.append(paragraph('待用户决定', item))
     for warning in warnings:
         parts.append(paragraph('待完成', warning))
-    parts.append('</div><nav>' + ''.join(f'<a href="#{u["id"]}">{u["id"]}</a>' for u in units) + '</nav>')
-    for u in units:
+    parts.append('</div>')
+    current_nav = '<nav>' + ''.join(f'<a href="#{u["id"]}">{u["id"]}</a>' for u in units) + '</nav>'
+    if merged:
+        merged_duration = sum(u['duration_s'] for u in merged)
+        parts.append(f'<h2 id="seedance25" data-board-group="seedance25">Seedance 2.5 · 30秒合并版</h2><p data-board-group="seedance25">{len(merged)}段 · 共{merged_duration:g}秒</p>')
+        parts.append('<nav data-board-group="seedance25">' + ''.join(f'<a href="#{esc(u["id"])}" title="{esc(u["title"])}">{esc(u["id"])}</a>' for u in merged) + '</nav>')
+    else:
+        parts.append(current_nav)
+    for i, u in enumerate((*merged, *units)):
+        if merged and i == len(merged):
+            parts.append(f'<h2 id="current-units" data-board-group="current">{current_label}</h2>')
+            parts.append(current_nav.replace('<nav>', '<nav data-board-group="current">', 1))
         uid = u['id']
-        parts.append(f'<article id="{uid}"><small>{uid} · {u["duration_s"]:g}秒 · {esc(u["framing"])}</small><h2>{esc(u["title"])}</h2>')
+        is_merge = u.get('model') == 'seedance25'
+        model_tag = 'Seedance 2.5 · ' if is_merge else ''
+        group_attr = f' data-board-group="{"seedance25" if is_merge else "current"}"' if merged else ''
+        parts.append(f'<article id="{uid}"{group_attr}><small>{model_tag}{uid} · {u["duration_s"]:g}秒 · {esc(u["framing"])}</small><h2>{esc(u["title"])}</h2>')
+        if is_merge and text(u.get('submission_hold')):
+            parts.append(paragraph('生成状态', u['submission_hold']))
         if text(u.get('dramatic_arc')):
             parts.append(paragraph('三拍爆点弧线', u['dramatic_arc']))
         if text(u.get('combat_mode')):
@@ -598,7 +626,7 @@ def render(data, base, output, warnings):
             ref = refs[rid]
             label = 'Video' if ref.get('type') == 'video_reference' else 'Picture'
             media_counts[label] += 1
-            caption = f'{"图" if wan and label == "Picture" else label} {media_counts[label]} · {rid} · {ref["purpose"]}'
+            caption = f'{"图" if (wan or is_merge) and label == "Picture" else label} {media_counts[label]} · {rid} · {ref["purpose"]}'
             if text(ref.get('path')) and resolve(base, ref['path']).is_file():
                 href = esc(url(base, ref['path'], output))
                 media = f'<video controls preload="metadata" style="width:100%" src="{href}"></video>' if label == 'Video' else f'<a href="{href}" target="_blank" rel="noopener"><img loading="lazy" src="{href}" alt="{esc(caption)}"></a>'
@@ -616,7 +644,8 @@ def render(data, base, output, warnings):
         parts.extend(f'<blockquote>{esc(d)}</blockquote>' for d in u.get('dialogue', []))
         parts.extend([paragraph('声音', u['sound']), paragraph('接点', u['continuity']), paragraph('参考图输入设计', ' → '.join(u.get('references', [])) or '待绑定')])
         prompt = model_prompt(u)
-        parts.append(f'<details id="unit-{uid}"><summary>{uid} · {u["duration_s"]:g}秒 · 完整{"Seedance 2.0" if seedance else "Wan3英文" if wan and u.get("prompt_language") == "en" else "Wan3" if wan else "H3"}提示词草稿</summary><button type="button" onclick="copyPrompt(this)">复制完整提示词</button><pre>{esc(prompt)}</pre>{paragraph("后期说明", u.get("post", "无额外后期说明"))}</details></article>')
+        prompt_label = 'Seedance 2.5' if is_merge else 'Seedance 2.0' if seedance else 'Wan3英文' if wan and u.get('prompt_language') == 'en' else 'Wan3' if wan else 'H3'
+        parts.append(f'<details id="unit-{uid}"><summary>{uid} · {u["duration_s"]:g}秒 · 完整{prompt_label}提示词草稿</summary><button type="button" onclick="copyPrompt(this)">复制完整提示词</button><pre>{esc(prompt)}</pre>{paragraph("后期说明", u.get("post", "无额外后期说明"))}</details></article>')
     parts.append(f'<footer class="muted">{esc(summary)} · {esc(state)}</footer></main><script>{js}</script></body></html>')
     return '\n'.join(parts)
 
